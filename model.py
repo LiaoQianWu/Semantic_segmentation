@@ -7,9 +7,10 @@ from tensorflow import keras
 from keras.models import Model
 from keras.layers import *
 from keras import backend as K
+from CustomModel import CustomModel
 
 
-def unet(pretrained_weights = None,input_size = (256,256,1)):
+def unet(pretrained_weights = None, input_size = (256,256,1), custom_model=False):
     inputs = Input(input_size)
     conv1 = Conv2D(64, (3, 3), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(inputs)
     conv1 = Conv2D(64, (3, 3), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv1)
@@ -54,7 +55,10 @@ def unet(pretrained_weights = None,input_size = (256,256,1)):
     conv9 = Conv2D(2, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv9)
     conv10 = Conv2D(1, 1, activation = 'sigmoid')(conv9)
 
-    model = Model(inputs = inputs, outputs = conv10)
+    if custom_model:
+        model = CustomModel(inputs = inputs, outputs = conv10)
+    else:
+        model = Model(inputs = inputs, outputs = conv10)
     
     #model.summary()
 
