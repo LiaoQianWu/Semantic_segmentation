@@ -26,13 +26,14 @@ else:
 """
 
 
-
 #HYPERPARAMETER FOR DATA GENERATOR
 DATA_PATH = "path/to/data" #Data allocation is described in README
 
 params = dict(batch_size = 8,
               image_size = (608, 608),
-              shuffle = True)
+              shuffle = True,
+              data_aug=False,
+              weight_map=False)
 
 #DATA GENERATOR
 train_images = os.listdir(DATA_PATH + "/train_frames/train")
@@ -68,70 +69,42 @@ mask_pair = train_pair + val_pair + test_pair
 for i in range(len(mask_pair)):
     masks[mask_pair[i][0]] = mask_pair[i][1]
 
-train_generator = DataGenerator(images["train"], masks, data_aug=False, weight_map=True, **params)
-val_generator = DataGenerator(images["val"], masks, data_aug=False, weight_map=True, **params) #weight_map=True
+train_generator = DataGenerator(images["train"], masks, **params)
+val_generator = DataGenerator(images["val"], masks, **params)
 
 
-
-#HYPERPARAMETER
-weights_path = "D:/user/Desktop/(Karl) Lab_rotation/Malaria_Keras_model/Unet/weights.{epoch:02d}-{val_loss:.2f}.h5"
-num_of_epochs = 30
+#HYPERPARAMETER FOR MODEL TRAINING
+weights_path = "path/to/saving/weights.{epoch:02d}-{val_loss:.2f}.h5"
+num_of_epochs = 60
 num_of_training_images = len(train_images)
 num_of_val_images = len(val_images)
-"""
-classWeight = {0: 0.892,
-               1: 1.147}
-"""
 
 #MODEL TRAINING
-model = custom_model.unet(pretrained_weights = "(weight map)Malaria_segmentation.h5",
-                          input_size=(608, 608, 1))
-#pretrained_weights = "(data_augmentation2)Malaria_segmentation.h5"
+########################################################################################################################
+# Important:
+# If 'weight_map' is set to 'True' in DataGenerator, 'custom_model' in U-net model should be set to 'True'.
+# Note that optimizer status should have been saved in h5 format file, so do not have to specify optimizer again.
+########################################################################################################################
+model = model.unet(input_size=(608, 608, 1), custom_model=False)
+# If trained model is going to be ued
+#model = load_model("trained_model.h5", custom_objects={"CustomModel": CustomModel})
 
 model.compile(loss="binary_crossentropy",
-              metrics = ["accuracy", tf.keras.metrics.MeanIoU(num_classes=2)]) #sample_weight_mode="temporal"
-#optimizer = Adam(lr=4e-4)
-
-
-"""
-model = load_model("(weight map)Malaria_segmentation.h5",
-                custom_objects={"CustomModel": CustomModel})
-"""
-
+              optimizer = Adam(lr=4e-4),
+              metrics = ["accuracy", tf.keras.metrics.MeanIoU(num_classes=2)])
 
 callbacks_list = [ModelCheckpoint(weights_path, monitor="val_loss",
-                                  save_best_only=True, mode="min")]
-#                  EarlyStopping(monitor="val_loss", min_delta=0, patience=4,
-#                                mode="min", restore_best_weights=True)
+                                  save_best_only=True, mode="min"),
+                  EarlyStopping(monitor="val_loss", min_delta=0, patience=4,
+                                mode="min", restore_best_weights=True)]
 
+model.fit(train_generator, epochs=num_of_epochs,
+          steps_per_epoch=(num_of_training_images//params["batch_size"]),
+          validation_data=val_generator,
+          validation_steps=(num_of_val_images//params["batch_size"]),
+          verbose=1, callbacks=callbacks_list)
 
-history = model.fit(train_generator, epochs=num_of_epochs,
-                    steps_per_epoch=(num_of_training_images//params["batch_size"]),
-                    validation_data=val_generator,
-                    validation_steps=(num_of_val_images//params["batch_size"]),
-                    verbose=1, callbacks=callbacks_list)
-
-model.save("Malaria_segmentation.h5")
-
-
-"""
-#TRAINING RESULTS VISUALIZATION
-plt.plot(history.history["accuracy"])
-plt.plot(history.history["val_accuracy"])
-plt.title("moodel accuracy")
-plt.ylabel("accuracy")
-plt.xlabel("epoch")
-plt.legend(["train", "val"], loc="upper left")
-plt.show()
-
-plt.plot(history.history["loss"])
-plt.plot(history.history["val_loss"])
-plt.title("moodel loss")
-plt.ylabel("loss")
-plt.xlabel("epoch")
-plt.legend(["train", "val"], loc="upper right")
-plt.show()
-"""
+model.save("trained_model.h5")
 
 
 """
