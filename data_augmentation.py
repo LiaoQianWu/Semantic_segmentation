@@ -1,15 +1,6 @@
 import os
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
-
-
-def brightness(im, lower_bound, upper_bound):
-    value = np.random.uniform(lower_bound, upper_bound)
-    im = im * value #can either addition or multiplication
-    im[im > (2**16 -1)] = 2**16 - 1
-    #im = np.clip(im, 0, 2**16-1)
-    return im
 
 
 def horizontal_shift(im, ratio):
@@ -50,14 +41,12 @@ def rotation(im, ma, angle):
     return im, ma
 
 
+# Other data augmentation functions
 """
-#TEST
-im = cv2.imread("D:/user/Desktop/(Karl) Lab_rotation/Malaria_segmentation_model/data/train_frames/train/bordered_cropped_C1-20190704_CsGFP_whirls.mvd2-20190704_CsGFP_d17_whirls 14_frame1.tif", -1)
-im2 = cv2.imread("D:/user/Desktop/(Karl) Lab_rotation/Malaria_segmentation_model/data/train_frames/train/bordered_cropped_C1-20190704_CsGFP_whirls.mvd2-20190704_CsGFP_d17_whirls 14_frame1.tif", -1)
-ma = cv2.imread("D:/user/Desktop/(Karl) Lab_rotation/Malaria_segmentation_model/data/train_masks/train/bordered_C1-20190704_CsGFP_whirls.mvd2-20190704_CsGFP_d17_whirls 14_frame1_mask.tif")
-ma2 = cv2.imread("D:/user/Desktop/(Karl) Lab_rotation/Malaria_segmentation_model/data/train_masks/train/bordered_C1-20190704_CsGFP_whirls.mvd2-20190704_CsGFP_d17_whirls 14_frame1_mask.tif")
-ma = cv2.cvtColor(ma, cv2.COLOR_BGR2GRAY)
-ma2 = cv2.cvtColor(ma2, cv2.COLOR_BGR2GRAY)
+def brightness(im, lower_bound, upper_bound):
+    value = np.random.uniform(lower_bound, upper_bound)
+    im = im * value # Can be either addition or multiplication
+    im[im > (2**16 -1)] = 2**16 - 1
+    #im = np.clip(im, 0, 2**16-1)
+    return im
 """
-
-
