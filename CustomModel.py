@@ -1,6 +1,5 @@
 import tensorflow as tf
 from tensorflow import keras
-from weighted_binary_crossentropy import weighted_binary_crossentropy
 
 class CustomModel(keras.Model):
     
@@ -16,7 +15,6 @@ class CustomModel(keras.Model):
             y_pred = self(x, training=True) # Forward pass
             # Compute the loss value.
             # The loss function is configured in `compile()`.
-            #loss = weighted_binary_crossentropy(y, y_pred, w)
             if len(data) == 3:
                 loss = self.compiled_loss(
                     y,
@@ -26,7 +24,7 @@ class CustomModel(keras.Model):
             else:
                 loss = self.compiled_loss(
                     y,
-                    y_pred) #regularization_losses=self.losses
+                    y_pred)
         
         # Compute gradients
         trainable_vars = self.trainable_variables
@@ -42,5 +40,3 @@ class CustomModel(keras.Model):
         # Return a dict mapping metric names to current value.
         # Note that it will include the loss (tracked in self.metrics).
         return {m.name: m.result() for m in self.metrics}
-        
-        
