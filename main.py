@@ -2,34 +2,33 @@ import os
 import re
 import numpy as np
 import cv2
+import matplotlib.pyplot as plt
+from skimage import io
 import tensorflow as tf
 from tensorflow import keras
 from keras.optimizers import Adam
 from keras.callbacks import ModelCheckpoint, EarlyStopping
-#from data_generator import DataGenerator
-from data_generator_for_weight_map import DataGenerator
-import matplotlib.pyplot as plt
-#import model
-import custom_model
 from keras.models import load_model
-from skimage import io
-from weighted_binary_crossentropy import weighted_binary_crossentropy
+from data_generator import DataGenerator
+import model
 from CustomModel import CustomModel
 
-#GPU TOGGLE
+# GPU TOGGLE
 """
+# Turn off GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
+# Check GPU status
 if tf.test.gpu_device_name():
-    print('GPU found')
+    print("GPU found")
 else:
     print("No GPU found")
 """
 
 
 
-#HYPERPARAMETER
-DATA_PATH = "D:/user/Desktop/(Karl) Lab_rotation/Malaria_segmentation_model/data"
+#HYPERPARAMETER FOR DATA GENERATOR
+DATA_PATH = "path/to/data" #Data allocation is described in README
 
 params = dict(batch_size = 8,
               image_size = (608, 608),
@@ -54,11 +53,11 @@ val_masks.sort(key=lambda filename: [int(i) if i.isdigit() else i
 
 test_images = os.listdir(DATA_PATH + "/test_frames")
 test_images.sort(key=lambda filename: [int(i) if i.isdigit() else i
-                                        for i in re.findall(r"[^0-9]+|[0-9]+", filename)])
+                                       for i in re.findall(r"[^0-9]+|[0-9]+", filename)])
 
 test_masks = os.listdir(DATA_PATH + "/test_masks")
 test_masks.sort(key=lambda filename: [int(i) if i.isdigit() else i
-                                     for i in re.findall(r"[^0-9]+|[0-9]+", filename)])
+                                      for i in re.findall(r"[^0-9]+|[0-9]+", filename)])
 
 images = dict(train = train_images, val = val_images, test = test_images)
 masks = dict()
