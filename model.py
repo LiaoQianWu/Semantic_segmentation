@@ -55,10 +55,10 @@ def unet(pretrained_weights = None, input_size = (256,256,1), custom_model=False
     conv9 = Conv2D(2, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv9)
     conv10 = Conv2D(1, 1, activation = 'sigmoid')(conv9)
 
-    if custom_model:
-        model = CustomModel(inputs = inputs, outputs = conv10)
-    else:
+    if custom_model == False:
         model = Model(inputs = inputs, outputs = conv10)
+    else:
+        model = CustomModel(inputs = inputs, outputs = conv10)
     
     #model.summary()
 
@@ -66,5 +66,3 @@ def unet(pretrained_weights = None, input_size = (256,256,1), custom_model=False
     	model.load_weights(pretrained_weights)
 
     return model
-
-
