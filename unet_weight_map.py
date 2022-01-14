@@ -6,8 +6,37 @@ from scipy.ndimage.morphology import distance_transform_edt
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
+###########################################################################
+# Acknowledgements:
+# The code was taken and adapted from Rok Mihevc (rok/unet_weight_map.py).
+# https://gist.github.com/rok/5f4314ed3c294521456c6afda36a3a50
+###########################################################################
+
 
 def UnetWeightMap(mask, wc=None, w0=10, sigma=5):
+    
+    """
+    Generate weight maps as specified in the U-Net paper for boolean mask.
+    
+    "U-Net: Convolutional Networks for Biomedical Image Segmentation"
+    https://arxiv.org/pdf/1505.04597.pdf
+    
+    Parameters
+    ----------
+    mask: Numpy array
+        2D array of shape (image_height, image_width) representing binary mask of objects.
+    wc: dict
+        Dictionary of weight classes.
+    w0: int
+        Border weight parameter.
+    sigma: int
+        Border width parameter.
+    Returns
+    -------
+    Numpy array
+        Training weights. A 2D array of shape (image_height, image_width).
+    """
+    
     mask_with_labels = label(mask)
     no_label_parts = mask_with_labels == 0
     label_ids = np.unique(mask_with_labels)[1:]
@@ -35,17 +64,11 @@ def UnetWeightMap(mask, wc=None, w0=10, sigma=5):
 
 """
 #TEST
-os.chdir("D:/user/Desktop/(Karl) Lab_rotation/Malaria_segmentation_model/data/train_masks/train")
-
-ma = cv2.imread("C1-20190704_CsGFP_whirls.mvd2-20190704_CsGFP_d17_whirls 14_frame1_mask.tif")
-ma = cv2.cvtColor(ma, cv2.COLOR_BGR2GRAY)
-ma = cv2.resize(ma, (608, 608), interpolation=cv2.INTER_NEAREST)
-
-classLabe = np.unique(label(ma))
+classLabel = np.unique(label(ma))
 weightMap = UnetWeightMap(ma)
 
-#plt.imshow(ma, cmap="gray")
-#plt.axis("off")
+plt.imshow(ma, cmap="gray")
+plt.axis("off")
 
 fig, ax = plt.subplots()
 plt.axis("off")
