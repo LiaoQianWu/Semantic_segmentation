@@ -9,6 +9,12 @@ from keras.layers import *
 from keras import backend as K
 from CustomModel import CustomModel
 
+################################################################
+# Acknowledgements:
+# The code was taken and adapted from zhixuhao (zhixuhao/unet).
+# https://github.com/zhixuhao/unet
+################################################################
+
 
 def unet(pretrained_weights = None, input_size = (256,256,1), custom_model=False):
     inputs = Input(input_size)
