@@ -2,9 +2,9 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-os.chdir("D:/user/Desktop/(Karl) Lab_rotation/Malaria_segmentation_model/Unet/results/weight_map")
+os.chdir("path/to/dir")
 
-with open("(weight map)for_plotting_training_results.TXT", "r") as f:
+with open("example_training_result.txt", "r") as f:
     loss_list = []
     acc_list = []
     IOU_list = []
@@ -12,12 +12,14 @@ with open("(weight map)for_plotting_training_results.TXT", "r") as f:
     val_acc_list = []
     val_IOU_list = []
     for line in f.readlines():
-        loss = line.split("-")[0]
-        acc = line.split("-")[1]
-        IOU = line.split("-")[2]
-        val_loss = line.split("-")[3]
-        val_acc = line.split("-")[4]
-        val_IOU = line.split("-")[5]
+        line = line.strip()
+        spli = line.split("-")
+        loss = spli[0]
+        acc = spli[1]
+        IOU = spli[2]
+        val_loss = spli[3]
+        val_acc = spli[4]
+        val_IOU = spli[5]
         loss_list.append(loss)
         acc_list.append(acc)
         IOU_list.append(IOU)
@@ -34,7 +36,7 @@ with open("(weight map)for_plotting_training_results.TXT", "r") as f:
     
     plt.plot(acc_list, label="Train")
     plt.plot(val_acc_list, label="Val")
-    plt.title("Training accuracy (with weight map)")
+    plt.title("Training accuracy")
     plt.ylabel("Accuracy")
     plt.xlabel("Epochs")
     #plt.ylim(0.65, 1.00)
@@ -43,7 +45,7 @@ with open("(weight map)for_plotting_training_results.TXT", "r") as f:
 
     plt.plot(loss_list)
     plt.plot(val_loss_list)
-    plt.title("Training loss (with weight map)")
+    plt.title("Training loss")
     plt.ylabel("Loss")
     plt.xlabel("Epochs")
     #plt.ylim(0.25, 0.60)
@@ -52,9 +54,10 @@ with open("(weight map)for_plotting_training_results.TXT", "r") as f:
     
     plt.plot(IOU_list, label="Train")
     plt.plot(val_IOU_list, label="Val")
-    plt.title("Training IOU core (with weight map)")
+    plt.title("Training IOU core")
     plt.ylabel("IOU score")
     plt.xlabel("Epochs")
     #plt.ylim(0.260, 0.330)
     plt.legend(loc="upper left")
     plt.show()
+    
