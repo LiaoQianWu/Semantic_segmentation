@@ -107,23 +107,25 @@ model.fit(train_generator, epochs=num_of_epochs,
 model.save("trained_model.h5")
 
 
-"""
+
 #EVALUTION
+'''
 test_generator = DataGenerator(images["test"], masks, batch_size=1, image_size=(608, 608), shuffle=False)
                                       
-model = load_model("D:/user/Desktop/(Karl) Lab_rotation/Malaria_segmentation_model/Unet/(with aug)Malaria_segmentation.h5")
+model = load_model("path/to/trained_model.h5")
 score = model.evaluate(test_generator, verbose=1, return_dict=True)
-"""
+'''
 
-"""
+
 #PREDICTION
+'''
 test_generator = DataGenerator(images["test"], batch_size=1, image_size=(608, 608), shuffle=False, prediction=True)
 
-model = load_model("D:/user/Desktop/(Karl) Lab_rotation/Malaria_segmentation_model/Unet/(weight map)Malaria_segmentation.h5",
+model = load_model("path/to/trained_model.h5",
                    custom_objects={"CustomModel": CustomModel})
 result = model.predict(test_generator, verbose=1)
 
 for i, name in enumerate(images["test"]):
     im = result[i]
-    io.imsave("D:/user/Desktop/(Karl) Lab_rotation/Malaria_segmentation_model/Unet/results/result_" + name, im, plugin="tifffile")
-"""
+    io.imsave("path/to/result_" + name, im, plugin="tifffile")
+'''
