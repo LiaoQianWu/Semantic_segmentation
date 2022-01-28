@@ -27,7 +27,7 @@ else:
 
 
 #HYPERPARAMETER FOR DATA GENERATOR
-DATA_PATH = "path/to/data" #Data allocation is described in README
+DATA_PATH = "path/to/data" #Data allocation has to be improved
 
 params = dict(batch_size = 8,
               image_size = (608, 608),
@@ -127,5 +127,5 @@ result = model.predict(test_generator, verbose=1)
 
 for i, name in enumerate(images["test"]):
     im = result[i]
-    io.imsave("path/to/result_" + name, im, plugin="tifffile")
+    io.imsave("path/to/result_" + name, im, plugin="tifffile") #Conduct postprocessing afterward to remove too small segments
 '''
