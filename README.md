@@ -1,6 +1,6 @@
 ## Semantic segmentation
 
-Perform image segmentation using [Keras](https://keras.io/api/) framework and [U-net](https://arxiv.org/pdf/1505.04597.pdf) model.
+Perform image segmentation on fluorescence microscopy images using [Keras](https://keras.io/api/) framework and [U-net](https://arxiv.org/pdf/1505.04597.pdf) model.
 
 > To be improved:
 * **Data allocation** (i.e., training, validation, and test data): Data splitter and data generator can be incorporated into model training.
